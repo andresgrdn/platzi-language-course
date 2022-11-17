@@ -1,7 +1,7 @@
 from unittest import TestCase
 from typing import List
 
-from lpp.token import(
+from lpp.token import (
     Token,
     TokenType,
 )
@@ -57,5 +57,20 @@ class LexerTest(TestCase):
         self.assertEqual(tokens, expected_tokens)
 
     def test_delimiters(self) -> None:
-        self.fail('Todavia no esta implementado')
-        source = '(){},;'
+        source: str = '(){},;'
+        lexer: Lexer = Lexer(source)
+
+        tokens: List[Token] = []
+        for i in range(len(source)):
+            tokens.append(lexer.next_token())
+
+        expected_tokens: List[Token] = [
+            Token(TokenType.LPAREN, '('),
+            Token(TokenType.RPAREN, ')'),
+            Token(TokenType.LBRACE, '{'),
+            Token(TokenType.RBRACE, '}'),
+            Token(TokenType.COMMA, ','),
+            Token(TokenType.SEMICOLON, ';'),
+        ]
+
+        self.assertEqual(tokens, expected_tokens)

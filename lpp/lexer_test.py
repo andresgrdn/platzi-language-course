@@ -11,7 +11,7 @@ from lpp.lexer import Lexer
 class LexerTest(TestCase):
 
     def test_illegal(self) -> None:
-        source: str = '!¿@'
+        source: str = '¿@'
         lexer: Lexer = Lexer(source)
 
         tokens: List[Token] = []
@@ -19,7 +19,6 @@ class LexerTest(TestCase):
             tokens.append(lexer.next_token())
 
         expected_tokens: List[Token] = [
-            Token(TokenType.ILLEGAL, '!'),
             Token(TokenType.ILLEGAL, '¿'),
             Token(TokenType.ILLEGAL, '@'),
         ]
@@ -39,7 +38,7 @@ class LexerTest(TestCase):
             Token(TokenType.PLUS, '+'),
             Token(TokenType.MINUS, '-'),
             Token(TokenType.DIV, '/'),
-            Token(TokenType.PROD, '*'),
+            Token(TokenType.MULTIPLICATION, '*'),
             Token(TokenType.LT, '<'),
             Token(TokenType.GT, '>'),
         ]
@@ -186,6 +185,30 @@ class LexerTest(TestCase):
             Token(TokenType.FALSE, 'falso'),
             Token(TokenType.SEMICOLON, ';'),
             Token(TokenType.RBRACE, '}'),
+        ]
+
+        self.assertEqual(tokens, expected_tokens)
+
+    def test_two_character_operator(self) -> None:
+        source: str = '''
+            10 == 9;
+            10 != 9;
+        '''
+        lexer: Lexer = Lexer(source)
+
+        tokens: List[Token] = []
+        for i in range(8):
+            tokens.append(lexer.next_token())
+
+        expected_tokens: List[Token] = [
+            Token(TokenType.INT, '10'),
+            Token(TokenType.EQ, '=='),
+            Token(TokenType.INT, '9'),
+            Token(TokenType.SEMICOLON, ';'),
+            Token(TokenType.INT, '10'),
+            Token(TokenType.NOT_EQ, '!='),
+            Token(TokenType.INT, '9'),
+            Token(TokenType.SEMICOLON, ';'),
         ]
 
         self.assertEqual(tokens, expected_tokens)
